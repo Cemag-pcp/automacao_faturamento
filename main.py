@@ -55,10 +55,12 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
     # Clicar em selecionar todos
     iframes(nav) # entrar no iframe
+    grupo_botao_resultado_busca_pendencia = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+        By.XPATH, '//*[@id="pedidosDaBuscaDePendencia"]')))
     grupo_botao_selecionar_todos = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
         By.XPATH, '//*[@id="pedidosDaBuscaDePendencia"]//*[@id="invertSelectionButton"]')))
-
-    grupo_botao_selecionar_todos.click() # ativa os campos
+    
+    grupo_botao_resultado_busca_pendencia.click() # ativa os campos
     time.sleep(1.5)
     grupo_botao_selecionar_todos.click()
     print("Clicado selecionar todos")
@@ -90,15 +92,15 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     iframes(nav) # entrar no iframe
 
     # Verificar o campo aprovação
-    campo_aprovacao= WebDriverWait(nav, 3).until(EC.element_to_be_clickable((
-        By.XPATH, '//*[@id="pedidoOuProvisao"]//input[@name="APROVACAO"]')))
-    data_aprovacao = campo_aprovacao.get_attribute("value")
-    print("Coletado campo Aprovação")
-    print(data_aprovacao," e ",data_pedido)
+    # campo_aprovacao= WebDriverWait(nav, 3).until(EC.element_to_be_clickable((
+    #     By.XPATH, '//*[@id="pedidoOuProvisao"]//input[@name="APROVACAO"]')))
+    # data_aprovacao = campo_aprovacao.get_attribute("value")
+    # print("Coletado campo Aprovação")
+    # print(data_aprovacao," e ",data_pedido)
 
-    if data_aprovacao != data_pedido:
-        fechar_todas_abas(nav)
-        return "Data do pedido não confere",3
+    # if data_aprovacao != data_pedido:
+    #     fechar_todas_abas(nav)
+    #     return "Data do pedido não confere",3
 
     # Verificar a localização da pessoa (confirmar como será feito)
     campo_pessoa = WebDriverWait(nav, 3).until(EC.element_to_be_clickable((
@@ -343,6 +345,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             impostos_pedido += icms + pis + cofins
             valor_total_pedido += impostos_pedido
             print("Deduzido valor do item na nota")
+
         # Preencher a planilha com os impostos do item específico
         itens, sheet = busca_worksheet("IMPOSTOS")
         sheet.append_row([chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,"Sucesso"])
@@ -381,7 +384,8 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     # clicar em emitir NF
     nav.switch_to.default_content() # sair do iframe
     emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        By.XPATH, '//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]')))
+        By.XPATH, '/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
+    
     emitir_nf_button.click()
     print("Pressionado botão Emitir NF")
     carregamento(nav)
@@ -414,7 +418,8 @@ def main():
     chrome_driver_path = verificar_chrome_driver() # Verificação do driver do chrome
     nav = webdriver.Chrome()#chrome_driver_path) # Inicia o navegador
     nav.maximize_window() # Maximiza a tela
-    nav.get("https://hcemag.innovaro.com.br/sistema/") # Acessa o site
+    nav.get("http://127.0.0.1/sistema") # base de produção
+    # nav.get("https://hcemag.innovaro.com.br/sistema") # base de teste
 
     # 2° etapa: Login
     login(nav)
@@ -428,7 +433,8 @@ def main():
         print(row)
         if row['CH Pedido'] == None:
             break
-        status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido']), row['Transportador'], row['Volume'])
+
+        status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace(".","").replace(",",".")), row['Transportador'], row['Volume'])
 
         # status = [[status]]
         intervalo = f'G{index+1}:H{index+1}'

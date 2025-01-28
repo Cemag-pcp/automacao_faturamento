@@ -27,12 +27,12 @@ def home():
 def ativar_automacao():
     global terminou
     terminou = False
-    try:
-        main()
-    except Exception:
-        terminouFunc()
-        return jsonify({'status': 'ERRO!'})
+    # try:
+    main()
+    # except Exception:
     terminouFunc()
+        # return jsonify({'status': 'ERRO!'})
+    # terminouFunc()
     return jsonify({'status': 'processado'})
     # return "Automação finalizada"
 
