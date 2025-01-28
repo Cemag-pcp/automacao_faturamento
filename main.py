@@ -189,7 +189,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     campo_tipo.send_keys('NFe')
     time.sleep(1.5)
     campo_tipo.send_keys(Keys.TAB)
-    time.sleep(1.5)
+    carregamento(nav)
     print("Preenchido campo Tipo")
 
     # Preencher o Série/Subserie
@@ -198,7 +198,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     campo_seriesubs.send_keys('1')
     time.sleep(1.5)
     campo_seriesubs.send_keys(Keys.TAB)
-    time.sleep(1.5)
+    carregamento(nav)
     print("Preenchido Campo Série Subsérie")
 
     # Preencher o Indicação de Presença
@@ -207,6 +207,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     campo_tipo_indpres.send_keys('9')
     time.sleep(1.5)
     campo_tipo_indpres.send_keys(Keys.TAB)
+    carregamento(nav)
 
     print("Preenchido Campo Indicação de presença")
 
@@ -222,7 +223,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     campo_tipo_indintermed.send_keys('s')
     time.sleep(1.5)
     campo_tipo_indintermed.send_keys(Keys.TAB)
-    time.sleep(1.5)
+    carregamento(nav)
     print("Preenchido Campo Indicativo de intermediador")
     
 
