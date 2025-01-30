@@ -15,6 +15,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
     # venda > pedido > baixa de pedido de saída
     # 89196617
     # 3° etapa: Navegar pelo menu
+    carregamento(nav)
     menu_cadastro(nav)
 
     nav.switch_to.default_content() # sair do iframe
@@ -378,19 +379,26 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH, '//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button default"]')))
         grupo_botao_calcular.click()
         print("Pressionado botão calcular")
-
-        carregamento(nav)
+        if carregamento(nav) == 0:
+            nav.switch_to.default_content() # sair do iframe
+            grupo_botao_calcular.click()
+            carregamento(nav)
 
         # validações e conferência dos dados
 
         # clicar em emitir NF
         nav.switch_to.default_content() # sair do iframe
         emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-            By.XPATH,'//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]')))
-        # '/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]'
+            By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
+        
+        # //*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]'
         emitir_nf_button.click()
         print("Pressionado botão Emitir NF")
-        carregamento(nav)
+        if carregamento(nav) == 0:
+            nav.switch_to.default_content() # sair do iframe
+            emitir_nf_button.click()
+            print("Tentativa de outro clique")
+            carregamento(nav)
 
         # # clicar em Sim
         nav.switch_to.default_content() # sair do iframe
@@ -414,7 +422,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         return status,1
     except Exception as e:
-        erro = "Erro encontrado:",e
+        erro = f"Erro encontrado: {e}"
         fechar_todas_abas(nav)
         return erro,2
 
@@ -424,8 +432,8 @@ def main():
     chrome_driver_path = verificar_chrome_driver() # Verificação do driver do chrome
     nav = webdriver.Chrome()#chrome_driver_path) # Inicia o navegador
     nav.maximize_window() # Maximiza a tela
-    nav.get("http://127.0.0.1/sistema") # base de produção
-    # nav.get("http://192.168.3.141/sistema") # base de produção
+    # nav.get("http://127.0.0.1/sistema") # base de produção
+    nav.get("http://192.168.3.140/sistema") # base de produção
     # nav.get("https://hcemag.innovaro.com.br/sistema") # base de teste
 
     # 2° etapa: Login

@@ -264,7 +264,7 @@ def verificar_se_erro(nav):
 # se conseguir = ok
 
 def carregamento(nav):
-
+    cont_load = 0
     nav.switch_to.default_content()
 
     print('procurando carregamento 1')
@@ -280,7 +280,7 @@ def carregamento(nav):
                 carregamento = WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="statusMessageBox"]')))
             
             except TimeoutException:
-                # Se o elemento não for encontrado, interrompa o loop
+                cont_load+=1
                 break
     except TimeoutException:
         # Não há mensagem de carregamento inicial
@@ -291,6 +291,7 @@ def carregamento(nav):
         # Espera inicial para verificar se a mensagem de carregamento existe
         carregamento =  WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="waitMessageBox"]')))
         
+        
         # Enquanto o elemento existir, continue verificando
         while True:
             print("Carregando...")
@@ -299,6 +300,7 @@ def carregamento(nav):
                 carregamento =  WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="waitMessageBox"]')))
             except TimeoutException:
                 # Se o elemento não for encontrado, interrompa o loop
+                cont_load+=1
                 break
     except TimeoutException:
         # Não há mensagem de carregamento inicial
@@ -317,6 +319,7 @@ def carregamento(nav):
                 carregamento =  WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="progressMessageBox"]')))
             except TimeoutException:
                 # Se o elemento não for encontrado, interrompa o loop
+                cont_load+=1
                 break
     except TimeoutException:
         # Não há mensagem de carregamento inicial
@@ -326,6 +329,7 @@ def carregamento(nav):
     try:
         # Espera inicial para verificar se a mensagem de carregamento existe
         carregamento = WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="content_waitMessageBox"]')))
+        cont_load+=1
         
         # Enquanto o elemento existir, continue verificando
         while True:
@@ -335,6 +339,7 @@ def carregamento(nav):
                 carregamento = WebDriverWait(nav, 3).until(EC.presence_of_element_located((By.XPATH, '//*[@id="content_waitMessageBox"]')))
             except TimeoutException:
                 # Se o elemento não for encontrado, interrompa o loop
+                cont_load+=1
                 break
     except TimeoutException:
         # Não há mensagem de carregamento inicial
@@ -342,6 +347,8 @@ def carregamento(nav):
         pass 
 
     iframes(nav)
+    print("quantidade de carregamentos: ",cont_load)
+    return cont_load
 
 # def guardar_erro(nav, erro):
 def preencher_cadastro_peca(nav, dados):
