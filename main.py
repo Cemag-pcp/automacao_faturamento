@@ -358,60 +358,65 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         next_button.click()
         print("Selecionado próximo item")
 
-    # Verificar valor do pedido caso ZONA FRANCA
-    if zona_franca:
-        if valor_total_pedido != valor_total:
+    try:
+        # Verificar valor do pedido caso ZONA FRANCA
+        if zona_franca:
+            if valor_total_pedido != valor_total:
+                fechar_todas_abas(nav)
+                return "Valor total do pedido não confere (ZF)",3
+            print("Validado valor do pedido (ZF)")
+        
+        #confirmar pedido
+        post_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH, '//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//*[@id="postButton"]')))
+        post_button.click()
+        print("Pressionado botão de confirmar pedido")
+
+        #clicar em Calcular
+        nav.switch_to.default_content() # sair do iframe
+        grupo_botao_calcular = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH, '//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button default"]')))
+        grupo_botao_calcular.click()
+        print("Pressionado botão calcular")
+
+        carregamento(nav)
+
+        # validações e conferência dos dados
+
+        # clicar em emitir NF
+        nav.switch_to.default_content() # sair do iframe
+        emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH,'//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]')))
+        # '/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]'
+        emitir_nf_button.click()
+        print("Pressionado botão Emitir NF")
+        carregamento(nav)
+
+        # # clicar em Sim
+        nav.switch_to.default_content() # sair do iframe
+        sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
+        sim_nf_button.click()
+        print("Pressionado botão SIM - Confirmar Emissão NF")
+        carregamento(nav)
+
+        erro = verificar_se_erro(nav)
+        if erro:
             fechar_todas_abas(nav)
-            return "Valor total do pedido não confere (ZF)",3
-        print("Validado valor do pedido (ZF)")
-    
-    #confirmar pedido
-    post_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        By.XPATH, '//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//*[@id="postButton"]')))
-    post_button.click()
-    print("Pressionado botão de confirmar pedido")
+            return erro,2
+        
+        # fechar aba 
+        # nav.switch_to.default_content() # sair do iframe
+        fechar_todas_abas(nav)
 
-    #clicar em Calcular
-    nav.switch_to.default_content() # sair do iframe
-    grupo_botao_calcular = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        By.XPATH, '//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button default"]')))
-    grupo_botao_calcular.click()
-    print("Pressionado botão calcular")
+        #retorna status ok para a planilha
+        status = 'Ok'
 
-    carregamento(nav)
-
-    # validações e conferência dos dados
-
-    # clicar em emitir NF
-    nav.switch_to.default_content() # sair do iframe
-    emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        By.XPATH, '/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
-    
-    emitir_nf_button.click()
-    print("Pressionado botão Emitir NF")
-    carregamento(nav)
-
-    # # clicar em Sim
-    nav.switch_to.default_content() # sair do iframe
-    sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
-    sim_nf_button.click()
-    print("Pressionado botão SIM - Confirmar Emissão NF")
-    carregamento(nav)
-
-    erro = verificar_se_erro(nav)
-    if erro:
+        return status,1
+    except Exception as e:
+        erro = "Erro encontrado:",e
         fechar_todas_abas(nav)
         return erro,2
-    
-    # fechar aba 
-    # nav.switch_to.default_content() # sair do iframe
-    fechar_todas_abas(nav)
-
-    #retorna status ok para a planilha
-    status = 'Ok'
-
-    return status,1
 
 # loop for
 def main():
@@ -419,7 +424,8 @@ def main():
     chrome_driver_path = verificar_chrome_driver() # Verificação do driver do chrome
     nav = webdriver.Chrome()#chrome_driver_path) # Inicia o navegador
     nav.maximize_window() # Maximiza a tela
-    nav.get("http://127.0.0.1/sistema") # base de produção
+    # nav.get("http://127.0.0.1/sistema") # base de produção
+    nav.get("http://192.168.3.141/sistema") # base de produção
     # nav.get("https://hcemag.innovaro.com.br/sistema") # base de teste
 
     # 2° etapa: Login
