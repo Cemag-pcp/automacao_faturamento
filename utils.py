@@ -1510,3 +1510,9 @@ def fechar_aba_atual(nav):
             tentativas += 1
     
     return 'Falha ao encontrar a classe esperada.'
+
+def shiftCtrl1(nav):
+    actions = ActionChains(nav)
+
+    # Pressiona as teclas Shift + Ctrl + 1
+    actions.key_down(Keys.SHIFT).key_down(Keys.CONTROL).send_keys("1").key_up(Keys.CONTROL).key_up(Keys.SHIFT).perform()
