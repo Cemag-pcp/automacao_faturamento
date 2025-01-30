@@ -432,8 +432,8 @@ def main():
     chrome_driver_path = verificar_chrome_driver() # Verificação do driver do chrome
     nav = webdriver.Chrome()#chrome_driver_path) # Inicia o navegador
     nav.maximize_window() # Maximiza a tela
-    # nav.get("http://127.0.0.1/sistema") # base de produção
-    nav.get("http://192.168.3.140/sistema") # base de produção
+    nav.get("http://127.0.0.1/sistema") # base de produção
+    # nav.get("http://192.168.3.140/sistema") # base de produção
     # nav.get("https://hcemag.innovaro.com.br/sistema") # base de teste
 
     # 2° etapa: Login
