@@ -67,7 +67,6 @@ def busca_worksheet(worksheet_name):
     list1 = wks.get_all_values()
     
     itens = pd.DataFrame(list1)
-    itens.info()
     itens.columns = itens.iloc[0]
     itens = itens.drop(index=0)
 

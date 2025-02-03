@@ -261,8 +261,12 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
     # guardar os valores dos impostos na planilha
     impostos_pedido = 0
+
+    itens, sheet = busca_worksheet("IMPOSTOS")
     
     for i in range(0,quantidade_produtos):
+    
+        itens, sheet = busca_worksheet("IMPOSTOS")
 
         # Guardando o valor do item
         campo_item = WebDriverWait(nav,10).until(EC.element_to_be_clickable((
@@ -289,6 +293,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSBC"]')))
         valor_bc_icms = float(campo_bc_icms.get_attribute("value"))
         print("Coletado campo BC ICMS")
+        sheet.append_row([i,chave,campo_recurso,bc_icms,'','','','',valor_bc_icms,'','','','',''])
 
         if valor_bc_icms != bc_icms:
             fechar_todas_abas(nav)
@@ -300,6 +305,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSPROPRIO"]')))
         valor_icms = float(campo_icms.get_attribute("value"))
         print("Coletado campo ICMS")
+        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,'','','',valor_bc_icms,valor_icms,'','','',''])
 
         if valor_icms != icms:
             fechar_todas_abas(nav)
@@ -309,9 +315,10 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         # validar campo bc_pis_cofins
         campo_bc_pis_cofins = WebDriverWait(nav,10).until(EC.element_to_be_clickable((
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="COFINSBC"]')))
-        
+
         valor_bc_pis_cofins = float(campo_bc_pis_cofins.get_attribute("value"))
         print("Coletado campo BC COFINS")
+        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,'','',valor_bc_icms,valor_icms,valor_bc_pis_cofins,'','',''])
 
         if valor_bc_pis_cofins != bc_pis_cofins:
             fechar_todas_abas(nav)
@@ -324,6 +331,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_pis = float(campo_pis.get_attribute("value"))
         print("Coletado campo PIS")
+        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,'',valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,'',''])
         
         if valor_campo_pis != pis:
             fechar_todas_abas(nav)
@@ -336,6 +344,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_cofins = float(campo_cofins.get_attribute("value"))
         print("Coletado campo COFINS")
+        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,''])
         
         if valor_campo_cofins != cofins:
             fechar_todas_abas(nav)
@@ -349,8 +358,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             print("Deduzido valor do item na nota")
 
         # Preencher a planilha com os impostos do item específico
-        itens, sheet = busca_worksheet("IMPOSTOS")
-        sheet.append_row([chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,"Sucesso"])
+        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,'Sucesso'])
         print("IMPOSTOS preenchidos na planilha de impostos ")
         # iframes(nav)
         # Aperta o next_button até o último item
@@ -388,6 +396,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         # clicar em emitir NF
         nav.switch_to.default_content() # sair do iframe
+        shiftCtrl1(nav)
+        print("Pressionado botão Emitir NF")
+        carregamento(nav)
         # emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
         #     By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
         
@@ -399,8 +410,6 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         #     emitir_nf_button.click()
         #     print("Tentativa de outro clique")
         #     carregamento(nav)
-        shiftCtrl1(nav)
-        carregamento(nav)
         # # clicar em Sim
         nav.switch_to.default_content() # sair do iframe
         sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
