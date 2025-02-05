@@ -293,7 +293,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSBC"]')))
         valor_bc_icms = float(campo_bc_icms.get_attribute("value"))
         print("Coletado campo BC ICMS")
-        sheet.append_row([i,chave,campo_recurso,bc_icms,'','','','',valor_bc_icms,'','','','',''])
+        sheet.append_row([i,chave,recurso,bc_icms,'','','','',valor_bc_icms,'','','','',''])
 
         if valor_bc_icms != bc_icms:
             fechar_todas_abas(nav)
@@ -305,7 +305,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSPROPRIO"]')))
         valor_icms = float(campo_icms.get_attribute("value"))
         print("Coletado campo ICMS")
-        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,'','','',valor_bc_icms,valor_icms,'','','',''])
+        sheet.append_row([i,chave,recurso,bc_icms,icms,'','','',valor_bc_icms,valor_icms,'','','',''])
 
         if valor_icms != icms:
             fechar_todas_abas(nav)
@@ -318,7 +318,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         valor_bc_pis_cofins = float(campo_bc_pis_cofins.get_attribute("value"))
         print("Coletado campo BC COFINS")
-        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,'','',valor_bc_icms,valor_icms,valor_bc_pis_cofins,'','',''])
+        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,'','',valor_bc_icms,valor_icms,valor_bc_pis_cofins,'','',''])
 
         if valor_bc_pis_cofins != bc_pis_cofins:
             fechar_todas_abas(nav)
@@ -331,7 +331,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_pis = float(campo_pis.get_attribute("value"))
         print("Coletado campo PIS")
-        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,'',valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,'',''])
+        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,'',valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,'',''])
         
         if valor_campo_pis != pis:
             fechar_todas_abas(nav)
@@ -344,7 +344,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_cofins = float(campo_cofins.get_attribute("value"))
         print("Coletado campo COFINS")
-        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,''])
+        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,''])
         
         if valor_campo_cofins != cofins:
             fechar_todas_abas(nav)
@@ -358,7 +358,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             print("Deduzido valor do item na nota")
 
         # Preencher a planilha com os impostos do item específico
-        sheet.append_row([i,chave,campo_recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,'Sucesso'])
+        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,'Sucesso'])
         print("IMPOSTOS preenchidos na planilha de impostos ")
         # iframes(nav)
         # Aperta o next_button até o último item
