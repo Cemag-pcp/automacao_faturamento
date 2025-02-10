@@ -264,7 +264,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
     itens, sheet = busca_worksheet("IMPOSTOS")
     
-    for i in range(0,quantidade_produtos):
+    for i in range(1,quantidade_produtos+1):
     
         itens, sheet = busca_worksheet("IMPOSTOS")
 
@@ -293,9 +293,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSBC"]')))
         valor_bc_icms = float(campo_bc_icms.get_attribute("value"))
         print("Coletado campo BC ICMS")
-        sheet.append_row([i,chave,recurso,bc_icms,'','','','',valor_bc_icms,'','','','',''])
-
-        if valor_bc_icms != bc_icms:
+        
+        if not diferencaAceitavel(valor_bc_icms,bc_icms):
+            sheet.append_row([i,chave,recurso,bc_icms,'','','','',valor_bc_icms,'','','','','Erro no BC ICMS'])
             fechar_todas_abas(nav)
             return 'O campo BC ICMS não confere', 3
         print("Validado campo BC ICMS")
@@ -305,9 +305,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
             By.XPATH,'//*[@id="pedidoOuProvisao_itempedidoouprovisao"]//input[@name="ICMSPROPRIO"]')))
         valor_icms = float(campo_icms.get_attribute("value"))
         print("Coletado campo ICMS")
-        sheet.append_row([i,chave,recurso,bc_icms,icms,'','','',valor_bc_icms,valor_icms,'','','',''])
-
-        if valor_icms != icms:
+        
+        if not diferencaAceitavel(valor_icms,icms):
+            sheet.append_row([i,chave,recurso,bc_icms,icms,'','','',valor_bc_icms,valor_icms,'','','','Erro no ICMS'])
             fechar_todas_abas(nav)
             return "O campo ICMS não confere",3
         print("Validado campo ICMS")
@@ -318,9 +318,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         valor_bc_pis_cofins = float(campo_bc_pis_cofins.get_attribute("value"))
         print("Coletado campo BC COFINS")
-        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,'','',valor_bc_icms,valor_icms,valor_bc_pis_cofins,'','',''])
-
-        if valor_bc_pis_cofins != bc_pis_cofins:
+        
+        if not diferencaAceitavel(valor_bc_pis_cofins,bc_pis_cofins):
+            sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,'','',valor_bc_icms,valor_icms,valor_bc_pis_cofins,'','','Erro no BC PIS COFINS'])
             fechar_todas_abas(nav)
             return "O campo BC PIS COFINS não confere",3
         print("Validado campo BC COFINS")
@@ -331,9 +331,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_pis = float(campo_pis.get_attribute("value"))
         print("Coletado campo PIS")
-        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,'',valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,'',''])
         
-        if valor_campo_pis != pis:
+        if not diferencaAceitavel(valor_campo_pis,pis):
+            sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,'',valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,'','Erro no PIS'])
             fechar_todas_abas(nav)
             return "O campo PIS não confere",3
         print("Validado campo PIS")
@@ -344,9 +344,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         
         valor_campo_cofins = float(campo_cofins.get_attribute("value"))
         print("Coletado campo COFINS")
-        sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,''])
         
-        if valor_campo_cofins != cofins:
+        if not diferencaAceitavel(valor_campo_cofins,cofins):
+            sheet.append_row([i,chave,recurso,bc_icms,icms,bc_pis_cofins,pis,cofins,valor_bc_icms,valor_icms,valor_bc_pis_cofins,valor_campo_pis,valor_campo_cofins,'Erro nos COFINS'])
             fechar_todas_abas(nav)
             return "O campo COFINS não confere",3
         print("Validado campo COFINS")

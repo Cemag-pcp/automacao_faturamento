@@ -1516,3 +1516,10 @@ def shiftCtrl1(nav):
 
     # Pressiona as teclas Shift + Ctrl + 1
     actions.key_down(Keys.SHIFT).key_down(Keys.CONTROL).send_keys("1").key_up(Keys.CONTROL).key_up(Keys.SHIFT).perform()
+
+def diferencaAceitavel(valor1,valor2):
+    difAceitavel = 0.03
+
+    diferenca = round(abs(valor1-valor2),2)
+
+    return diferenca <= difAceitavel
