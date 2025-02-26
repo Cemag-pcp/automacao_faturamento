@@ -459,9 +459,11 @@ def main():
         print(row)
         if row['CH Pedido'] == None:
             break
-
-        status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace(".","").replace(",",".")), row['Transportador'], row['Volume'])
-
+        try:
+            status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace(".","").replace(",",".")), row['Transportador'], row['Volume'])
+        except Exception as e:
+            print("Algum erro encontrado: ", e.args)
+            status, codigo_status = e.args,2
         # status = [[status]]
         intervalo = f'G{index+1}:H{index+1}'
 
@@ -470,6 +472,7 @@ def main():
         print(status)
         
     nav.close()
+
 
 if __name__ == "__main__":
     main()

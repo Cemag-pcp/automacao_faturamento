@@ -75,7 +75,7 @@ def busca_worksheet(worksheet_name):
 
     return itens,wks
 
-
+    
 # itens, sheet = busca_worksheet("IMPOSTOS")
 # for index, row in itens.iterrows():
 #         intervalo = f'A{index+2}:H{index+2}'
