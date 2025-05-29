@@ -460,7 +460,7 @@ def main():
         if row['CH Pedido'] == None:
             break
         try:
-            status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace(".","").replace(",",".")), row['Transportador'], row['Volume'])
+            status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace("R$", "").strip().replace(".", "").replace(",", ".")), row['Transportador'], row['Volume'])
         except Exception as e:
             print("Algum erro encontrado: ", e.args)
             status, codigo_status = e.args,2
