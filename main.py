@@ -468,6 +468,9 @@ def main():
         intervalo = f'G{index+1}:H{index+1}'
 
         # escrever na planilha o status
+        if status == "":
+            status,codigo_status = "Erro inesperado",2
+            
         sheet.update(intervalo,[[status,codigo_status]])
         print(status)
         
