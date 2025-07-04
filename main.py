@@ -463,14 +463,12 @@ def main():
             status,codigo_status = automacao_faturamento(nav,row['Data do pedido'], row['CH Pedido'],float(row['Valor total do pedido'].replace("R$", "").strip().replace(".", "").replace(",", ".")), row['Transportador'], row['Volume'])
         except Exception as e:
             print("Algum erro encontrado: ", e.args)
-            status, codigo_status = e.args,2
+            status = str(e.args[0]) if e.args else "Erro desconhecido"
+            codigo_status = 2
         # status = [[status]]
         intervalo = f'G{index+1}:H{index+1}'
 
         # escrever na planilha o status
-        if status == "":
-            status,codigo_status = "Erro inesperado",2
-            
         sheet.update(intervalo,[[status,codigo_status]])
         print(status)
         
