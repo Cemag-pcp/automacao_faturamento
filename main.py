@@ -396,20 +396,23 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         # clicar em emitir NF
         nav.switch_to.default_content() # sair do iframe
-        shiftCtrl1(nav)
-        print("Pressionado botão Emitir NF")
-        carregamento(nav)
+        # shiftCtrl1(nav)
         # emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
         #     By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
         
-        # # //*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]'
-        # emitir_nf_button.click()
-        # print("Pressionado botão Emitir NF")
-        # if carregamento(nav) == 0:
-        #     nav.switch_to.default_content() # sair do iframe
-        #     emitir_nf_button.click()
-        #     print("Tentativa de outro clique")
-        #     carregamento(nav)
+        emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
+        
+        # //*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]'
+        emitir_nf_button.click()
+        print("Pressionado botão Emitir NF")
+        if carregamento(nav) == 0:
+            nav.switch_to.default_content() # sair do iframe
+            emitir_nf_button.click()
+            print("Tentativa de outro clique")
+            carregamento(nav)
+        print("Pressionado botão Emitir NF")
+        carregamento(nav)
         # # clicar em Sim
         nav.switch_to.default_content() # sair do iframe
         sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
