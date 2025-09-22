@@ -401,7 +401,7 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         #     By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
         
         emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-            By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
+            By.XPATH,'//*[@id="buttonsContainer_1"]/td[13]/span[2]')))
         
         # //*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]'
         emitir_nf_button.click()
