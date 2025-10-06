@@ -421,13 +421,13 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         print("Pressionado botão Emitir NF")
         carregamento(nav)
         # # clicar em Sim
-        # nav.switch_to.default_content() # sair do iframe
-        # sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        #     By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
-        # sim_nf_button.click()
-        # print("Pressionado botão SIM - Confirmar Emissão NF")
-        # time.sleep(2)
-        # carregamento(nav)
+        nav.switch_to.default_content() # sair do iframe
+        sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+            By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
+        sim_nf_button.click()
+        print("Pressionado botão SIM - Confirmar Emissão NF")
+        time.sleep(2)
+        carregamento(nav)
 
         erro = verificar_se_erro(nav)
         if erro:
