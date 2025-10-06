@@ -3,6 +3,7 @@ from selenium import webdriver
 from utils import *
 from verificar_chrome import *
 from ligacao_plan import *
+import traceback
 
 # AttributeError: 'str' object has no attribute 'capabilities'
 
@@ -397,13 +398,19 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         # clicar em emitir NF
         nav.switch_to.default_content() # sair do iframe
         # shiftCtrl1(nav)
+        emitir_nf_button = WebDriverWait(nav, 10).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]"))
+        )
+        print("Localizado botão Emitir NF")
+        # Força o scroll até ele
+        nav.execute_script("arguments[0].scrollIntoView(true);", emitir_nf_button)
+        
+        emitir_nf_button = WebDriverWait(nav, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]"))
+        )
         # emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-        #     By.XPATH,'/html/body/div[4]/div/div[1]/table/tbody/tr/td[2]/table/tbody/tr/td[13]/span[2]')))
+        #     By.XPATH,'//*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]')))
         
-        emitir_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-            By.XPATH,'//*[@id="buttonsContainer_1"]/td[13]/span[2]')))
-        
-        # //*[@id="buttonsCell"]//td[@class="buttonsContainer"]//span[@class="wf-button"]//p[text()="0Emitir NF"]'
         emitir_nf_button.click()
         print("Pressionado botão Emitir NF")
         if carregamento(nav) == 0:
@@ -414,13 +421,13 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
         print("Pressionado botão Emitir NF")
         carregamento(nav)
         # # clicar em Sim
-        nav.switch_to.default_content() # sair do iframe
-        sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
-            By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
-        sim_nf_button.click()
-        print("Pressionado botão SIM - Confirmar Emissão NF")
-        time.sleep(2)
-        carregamento(nav)
+        # nav.switch_to.default_content() # sair do iframe
+        # sim_nf_button = WebDriverWait(nav, 10).until(EC.element_to_be_clickable((
+        #     By.XPATH, '//*[@id="promptMessageBox"]//*[@id="answers_0"]')))
+        # sim_nf_button.click()
+        # print("Pressionado botão SIM - Confirmar Emissão NF")
+        # time.sleep(2)
+        # carregamento(nav)
 
         erro = verificar_se_erro(nav)
         if erro:
@@ -436,8 +443,9 @@ def automacao_faturamento(nav,data_pedido,chave,valor_total,transportador,volume
 
         return status,1
     except Exception as e:
+        traceback.print_exc()
         erro = f"Erro encontrado: {e.args}"
-        print(e.args)
+        print(e)
         fechar_todas_abas(nav)
         return erro,2
 
